@@ -9,8 +9,8 @@ export default function Header({ totalCount = 0, filteredCount = 0 }) {
           <GraduationCapIcon size={20} />
         </div>
         <div className="brand-text">
-          <div className="brand-super">APEX INSTITUTE OF TECHNOLOGY</div>
-          <h1 className="brand-title">Student Identity Registry</h1>
+          <div className="brand-super">MOHAMED SATHAK A.J. COLLEGE OF ENGINEERING</div>
+          <h1 className="brand-title">Student Card</h1>
         </div>
       </div>
 
@@ -23,7 +23,7 @@ export default function Header({ totalCount = 0, filteredCount = 0 }) {
           <span className="count-num">{filteredCount}</span>
           <span className="count-slash">/</span>
           <span className="count-total">{totalCount}</span>
-          <span className="count-desc">ENROLLED</span>
+          <span className="count-desc">CARDS</span>
         </div>
       </div>
     </header>

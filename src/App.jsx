@@ -8,14 +8,14 @@ import DeleteModal from "./components/DeleteModal";
 import initialStudents, { DEPARTMENTS } from "./data/students";
 import "./App.css";
 
-const STORAGE_KEY_STUDENTS = "apex_students_v1";
-const STORAGE_KEY_LIKED = "apex_liked_students_v1";
+const STORAGE_KEY_STUDENTS = "msajce_students_v1";
+const STORAGE_KEY_LIKED = "msajce_liked_students_v1";
 
 export default function App() {
   // Load persisted students or fallback to initial dataset
   const [students, setStudents] = useState(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY_STUDENTS);
+      const saved = localStorage.getItem(STORAGE_KEY_STUDENTS) || localStorage.getItem("apex_students_v1");
       if (saved) return JSON.parse(saved);
     } catch {
       // Fallback
@@ -26,7 +26,7 @@ export default function App() {
   // Load persisted liked student IDs
   const [likedIds, setLikedIds] = useState(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY_LIKED);
+      const saved = localStorage.getItem(STORAGE_KEY_LIKED) || localStorage.getItem("apex_liked_students_v1");
       if (saved) return JSON.parse(saved);
     } catch {
       // Fallback
