@@ -4,13 +4,11 @@ import "./StudentCard.css";
 
 function getInitials(name) {
   if (!name) return "ST";
-  return name
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((w) => w[0])
-    .join("")
-    .toUpperCase();
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length >= 2) {
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+  return parts[0][0].toUpperCase();
 }
 
 function getDeptConfig(dept) {
@@ -38,14 +36,14 @@ export default function StudentCard({
   onDelete = () => {}
 }) {
   const [copied, setCopied] = useState(false);
-  const [imgError, setImgError] = useState(false);
   const cardRef = useRef(null);
 
-  const { id, name, roll, dept, year, cgpa, avatar, bloodGroup } = student;
+  const { id, name, roll, dept, year, cgpa, bloodGroup } = student;
   const numCgpa = parseFloat(cgpa) || 0;
   const isHonors = numCgpa >= 9.0;
   const deptConfig = getDeptConfig(dept);
   const studentKey = id || roll;
+  const initials = getInitials(name);
 
   // Micro cursor reflection on individual card
   const handleMouseMove = (e) => {
@@ -109,20 +107,12 @@ export default function StudentCard({
         </div>
       </div>
 
-      {/* Student Identity Core */}
+      {/* Student Identity Core with Monogram Initials */}
       <div className="card-body">
         <div className="avatar-ring">
-          {avatar && !imgError ? (
-            <img
-              src={avatar}
-              alt={name}
-              className="student-avatar"
-              onError={() => setImgError(true)}
-              loading="lazy"
-            />
-          ) : (
-            <div className="avatar-fallback">{getInitials(name)}</div>
-          )}
+          <div className="avatar-monogram" aria-label={`Initials: ${initials}`}>
+            {initials}
+          </div>
         </div>
 
         <h3 className="student-name" title={name}>

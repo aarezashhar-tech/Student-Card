@@ -202,28 +202,29 @@
   box-shadow: 0 10px 28px -2px rgba(var(--accent-rgb), 0.25);
 }
 
-.student-avatar {
+.avatar-monogram {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  object-fit: cover;
-  background: #1e2230;
-  display: block;
-}
-
-.avatar-fallback {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background: #181b24;
+  background: radial-gradient(circle at 35% 30%, rgba(var(--accent-rgb), 0.24) 0%, #12141c 85%);
+  border: 1px solid rgba(255, 255, 255, 0.09);
   color: #f8fafc;
   font-family: var(--font-heading);
   font-weight: 700;
-  font-size: 1.4rem;
+  font-size: 1.45rem;
   display: flex;
   align-items: center;
   justify-content: center;
   letter-spacing: 0.04em;
+  text-shadow: 0 0 16px rgba(var(--accent-rgb), 0.55);
+  user-select: none;
+  transition: all 0.3s ease;
+}
+
+.student-card:hover .avatar-monogram {
+  background: radial-gradient(circle at 35% 30%, rgba(var(--accent-rgb), 0.35) 0%, #151824 85%);
+  color: #ffffff;
+  text-shadow: 0 0 20px rgba(var(--accent-rgb), 0.75);
 }
 
 .student-name {

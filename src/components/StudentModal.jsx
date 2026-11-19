@@ -199,21 +199,6 @@ function StudentModalForm({ student, onClose, onSave }) {
               ))}
             </select>
           </div>
-
-          {/* Avatar URL */}
-          <div className="form-group">
-            <label htmlFor="student-avatar" className="form-label">
-              AVATAR PHOTO URL (OPTIONAL)
-            </label>
-            <input
-              id="student-avatar"
-              type="url"
-              className="form-input"
-              value={formData.avatar}
-              onChange={(e) => handleChange("avatar", e.target.value)}
-              placeholder="https://images.unsplash.com/..."
-            />
-          </div>
         </div>
 
         {/* Modal Actions */}
