@@ -1,8 +1,8 @@
-import { useRef, useState } from "react";
-import { CopyIcon, CheckIcon, AwardIcon, IdCardIcon, EditIcon, TrashIcon } from "./Icons";
+import { useState, useRef } from "react";
+import { CopyIcon, CheckIcon, SparklesIcon, HeartIcon, EditIcon, TrashIcon } from "./Icons";
 import "./StudentCard.css";
 
-function initials(name) {
+function getInitials(name) {
   if (!name) return "ST";
   return name
     .split(" ")
@@ -13,238 +13,198 @@ function initials(name) {
     .toUpperCase();
 }
 
-function getDeptTheme(dept) {
+function getDeptConfig(dept) {
   switch (dept) {
     case "AI & ML":
-      return { tag: "ai", color: "#8b5cf6", gradient: "linear-gradient(135deg, #7c3aed, #c084fc)" };
+      return { label: "AI & ML", color: "#a78bfa", rgb: "167, 139, 250" };
     case "Computer Science":
-      return { tag: "cs", color: "#3b82f6", gradient: "linear-gradient(135deg, #2563eb, #60a5fa)" };
+      return { label: "CS", color: "#38bdf8", rgb: "56, 189, 248" };
     case "Data Science":
-      return { tag: "ds", color: "#06b6d4", gradient: "linear-gradient(135deg, #0891b2, #38bdf8)" };
+      return { label: "Data Science", color: "#34d399", rgb: "52, 211, 153" };
     case "Cyber Security":
-      return { tag: "cyber", color: "#ec4899", gradient: "linear-gradient(135deg, #db2777, #f472b6)" };
+      return { label: "Cyber Sec", color: "#f472b6", rgb: "244, 114, 182" };
     case "Electronics & Comm":
-      return { tag: "ece", color: "#10b981", gradient: "linear-gradient(135deg, #059669, #34d399)" };
+      return { label: "ECE", color: "#fbbf24", rgb: "251, 191, 36" };
     default:
-      return { tag: "gen", color: "#6366f1", gradient: "linear-gradient(135deg, #4f46e5, #818cf8)" };
+      return { label: dept || "General", color: "#818cf8", rgb: "129, 140, 248" };
   }
 }
 
-export default function StudentCard({ student, onViewDetails, onEdit, onDelete, onCopyToast }) {
-  const cardRef = useRef(null);
+export default function StudentCard({
+  student,
+  isLiked = false,
+  onToggleLike = () => {},
+  onEdit = () => {},
+  onDelete = () => {}
+}) {
   const [copied, setCopied] = useState(false);
-  const [imageError, setImageError] = useState(false);
+  const [imgError, setImgError] = useState(false);
+  const cardRef = useRef(null);
 
-  const { name, roll, dept, year, cgpa, avatar, bloodGroup } = student;
+  const { id, name, roll, dept, year, cgpa, avatar, bloodGroup } = student;
   const numCgpa = parseFloat(cgpa) || 0;
   const isHonors = numCgpa >= 9.0;
-  const deptTheme = getDeptTheme(dept);
+  const deptConfig = getDeptConfig(dept);
+  const studentKey = id || roll;
 
-  // CGPA circular meter calculation (radius 32, circumference ~201)
-  const radius = 32;
-  const circumference = 2 * Math.PI * radius;
-  const percent = Math.min(Math.max(numCgpa / 10, 0), 1);
-  const strokeOffset = circumference - percent * circumference;
-
-  // 3D Parallax & Glare on pointer move
-  const handlePointerMove = (e) => {
-    const el = cardRef.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
+  // Micro cursor reflection on individual card
+  const handleMouseMove = (e) => {
+    const card = cardRef.current;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    const px = (x / rect.width - 0.5) * 16;
-    const py = (y / rect.height - 0.5) * -16;
-
-    el.style.setProperty("--rot-x", `${py}deg`);
-    el.style.setProperty("--rot-y", `${px}deg`);
-    el.style.setProperty("--glare-x", `${(x / rect.width) * 100}%`);
-    el.style.setProperty("--glare-y", `${(y / rect.height) * 100}%`);
-    el.style.setProperty("--glare-opacity", "1");
-  };
-
-  const handlePointerLeave = () => {
-    const el = cardRef.current;
-    if (!el) return;
-    el.style.setProperty("--rot-x", "0deg");
-    el.style.setProperty("--rot-y", "0deg");
-    el.style.setProperty("--glare-opacity", "0");
+    card.style.setProperty("--card-x", `${x}px`);
+    card.style.setProperty("--card-y", `${y}px`);
   };
 
   const handleCopyRoll = (e) => {
     e.stopPropagation();
     navigator.clipboard?.writeText(roll);
     setCopied(true);
-    if (onCopyToast) onCopyToast(`Copied roll number: ${roll}`);
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => setCopied(false), 1800);
   };
 
-  // Color code based on CGPA tier
-  const cgpaColor = numCgpa >= 9.0 ? "#10b981" : numCgpa >= 8.0 ? "#06b6d4" : numCgpa >= 7.0 ? "#3b82f6" : "#f59e0b";
+  // Progress percentage (out of 10)
+  const cgpaPercent = Math.min(Math.max((numCgpa / 10) * 100, 0), 100);
 
   return (
-    <div
-      className={`student-card-wrapper ${isHonors ? "is-honors" : ""}`}
+    <article
       ref={cardRef}
-      onPointerMove={handlePointerMove}
-      onPointerLeave={handlePointerLeave}
+      className={`student-card ${isHonors ? "is-honors" : ""} ${isLiked ? "is-liked" : ""}`}
+      onMouseMove={handleMouseMove}
+      style={{
+        "--accent-color": deptConfig.color,
+        "--accent-rgb": deptConfig.rgb
+      }}
     >
-      <article className="sc-badge">
-        {/* Dynamic Glass Glare Layer */}
-        <div className="sc-glare" aria-hidden="true" />
+      {/* Subtle Inner Glass Sheen */}
+      <div className="card-sheen" aria-hidden="true" />
 
-        {/* Lanyard Slot Cutout */}
-        <div className="sc-lanyard" aria-hidden="true">
-          <div className="sc-lanyard-slot" />
-          <div className="sc-lanyard-clip" />
+      {/* Top Capsule Row */}
+      <div className="card-top">
+        <div className="dept-badge">
+          <span className="dept-dot" />
+          <span className="dept-name">{dept}</span>
         </div>
 
-        {/* Top Header Strip with University Emblem & Chip */}
-        <div className="sc-header-strip">
-          <div className="sc-chip" title="Smart RFID / NFC Enabled Badge">
-            <div className="sc-chip-lines" />
-          </div>
-
-          <div className="sc-institution">
-            <span className="sc-college-name">APEX INSTITUTE</span>
-            <span className="sc-id-type">STUDENT IDENTIFICATION</span>
-          </div>
-
+        <div className="top-tags">
+          <span className="year-pill">{year}</span>
           {isHonors && (
-            <div className="sc-honor-badge" title="Dean's Honors Scholar">
-              <AwardIcon size={14} />
-              <span>DEAN'S LIST</span>
-            </div>
+            <span className="honors-badge" title="Academic Honors Scholar (CGPA ≥ 9.0)">
+              <SparklesIcon size={12} />
+              <span>HONORS</span>
+            </span>
+          )}
+          {/* Like / Favorite Button */}
+          <button
+            type="button"
+            className={`card-like-btn ${isLiked ? "active" : ""}`}
+            onClick={() => onToggleLike(studentKey)}
+            title={isLiked ? "Remove from favorites" : "Add to favorites"}
+            aria-label={isLiked ? "Unlike student" : "Like student"}
+          >
+            <HeartIcon size={15} filled={isLiked} />
+          </button>
+        </div>
+      </div>
+
+      {/* Student Identity Core */}
+      <div className="card-body">
+        <div className="avatar-ring">
+          {avatar && !imgError ? (
+            <img
+              src={avatar}
+              alt={name}
+              className="student-avatar"
+              onError={() => setImgError(true)}
+              loading="lazy"
+            />
+          ) : (
+            <div className="avatar-fallback">{getInitials(name)}</div>
           )}
         </div>
 
-        {/* Avatar & Department Section */}
-        <div className="sc-avatar-section">
-          <div className="sc-avatar-halo" style={{ background: deptTheme.gradient }}>
-            <div className="sc-avatar-frame">
-              {avatar && !imageError ? (
-                <img
-                  src={avatar}
-                  alt={name}
-                  className="sc-avatar-img"
-                  onError={() => setImageError(true)}
-                  loading="lazy"
-                />
-              ) : (
-                <div className="sc-avatar-initials" style={{ background: deptTheme.gradient }}>
-                  {initials(name)}
-                </div>
-              )}
+        <h3 className="student-name" title={name}>
+          {name}
+        </h3>
+
+        {/* 1-Click Interactive Roll Copy Pill */}
+        <button
+          type="button"
+          className={`roll-pill ${copied ? "copied" : ""}`}
+          onClick={handleCopyRoll}
+          title="Click to copy roll number"
+          aria-label={`Copy roll number: ${roll}`}
+        >
+          <span className="roll-label">ROLL</span>
+          <span className="roll-value">{roll}</span>
+          <span className="roll-icon">
+            {copied ? <CheckIcon size={12} /> : <CopyIcon size={12} />}
+          </span>
+          {copied && <span className="copied-toast">COPIED</span>}
+        </button>
+      </div>
+
+      {/* Understated Performance & Spec Rail */}
+      <div className="card-footer">
+        <div className="metric-row">
+          <div className="metric-header">
+            <span className="metric-label">CUMULATIVE GPA</span>
+            <div className="metric-value">
+              <span className="cgpa-number">{numCgpa.toFixed(2)}</span>
+              <span className="cgpa-scale">/ 10</span>
             </div>
           </div>
 
-          <div className="sc-badge-tags">
-            <span className="sc-dept-tag" style={{ borderColor: deptTheme.color, color: deptTheme.color }}>
-              {dept}
+          {/* Minimal Precision Progress Bar */}
+          <div className="progress-track" aria-hidden="true">
+            <div
+              className="progress-fill"
+              style={{ width: `${cgpaPercent}%` }}
+            />
+          </div>
+        </div>
+
+        <div className="meta-row">
+          <div className="meta-item">
+            <span className="meta-key">BLOOD</span>
+            <span className="meta-val">{bloodGroup || "—"}</span>
+          </div>
+
+          <div className="meta-item">
+            <span className="meta-key">STATUS</span>
+            <span className="meta-status">
+              <span className="status-indicator-dot" /> ACTIVE
             </span>
-            <span className="sc-year-tag">{year}</span>
           </div>
         </div>
 
-        {/* Student Primary Information */}
-        <div className="sc-info">
-          <h3 className="sc-student-name" title={name}>{name}</h3>
-          
-          <div className="sc-roll-container">
-            <span className="sc-roll-label">ROLL NO:</span>
-            <code className="sc-roll-number">{roll}</code>
-            <button
-              type="button"
-              className={`sc-copy-btn ${copied ? "copied" : ""}`}
-              onClick={handleCopyRoll}
-              title="Copy Roll Number"
-              aria-label="Copy roll number to clipboard"
-            >
-              {copied ? <CheckIcon size={14} /> : <CopyIcon size={14} />}
-            </button>
-          </div>
-        </div>
-
-        {/* Academic Performance & Meta Details */}
-        <div className="sc-academic-row">
-          <div className="sc-details-mini">
-            <div className="sc-detail-col">
-              <span className="sc-detail-title">BLOOD GRP</span>
-              <span className="sc-detail-val">{bloodGroup || "O+"}</span>
-            </div>
-            <div className="sc-detail-col">
-              <span className="sc-detail-title">STATUS</span>
-              <span className="sc-detail-val sc-status-active">
-                <span className="sc-status-dot" /> ACTIVE
-              </span>
-            </div>
-          </div>
-
-          {/* Radial CGPA Ring Gauge */}
-          <div className="sc-cgpa-gauge" title={`Cumulative GPA: ${numCgpa.toFixed(2)} out of 10.0`}>
-            <svg className="sc-gauge-svg" viewBox="0 0 76 76">
-              <circle className="sc-gauge-bg" cx="38" cy="38" r={radius} />
-              <circle
-                className="sc-gauge-fill"
-                cx="38"
-                cy="38"
-                r={radius}
-                stroke={cgpaColor}
-                strokeDasharray={circumference}
-                strokeDashoffset={strokeOffset}
-              />
-            </svg>
-            <div className="sc-gauge-text">
-              <span className="sc-gauge-val">{numCgpa.toFixed(2)}</span>
-              <span className="sc-gauge-caption">CGPA</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Holographic Security Barcode Strip */}
-        <div className="sc-security-barcode" aria-hidden="true">
-          <div className="sc-barcode-lines">
-            {[2, 1, 3, 1, 2, 4, 1, 3, 2, 1, 4, 2, 1, 3, 1, 2, 3, 1, 4, 2, 1, 2, 3, 1, 3].map((w, i) => (
-              <span key={i} style={{ width: `${w}px` }} />
-            ))}
-          </div>
-          <span className="sc-barcode-text">AUTH-SEC-2026-APX-{roll.slice(-4)}</span>
-        </div>
-
-        {/* Quick Action Footer */}
-        <div className="sc-actions-bar">
+        {/* Edit and Delete Actions Strip */}
+        <div className="card-actions-strip">
           <button
             type="button"
-            className="sc-view-pass-btn"
-            onClick={() => onViewDetails(student)}
-            title="Inspect Official 3D Flippable Student Pass"
+            className="card-action-btn edit"
+            onClick={() => onEdit(student)}
+            title={`Edit ${name}'s details`}
+            aria-label={`Edit ${name}`}
           >
-            <IdCardIcon size={16} />
-            <span>Digital Pass</span>
+            <EditIcon size={13} />
+            <span>Edit</span>
           </button>
 
-          <div className="sc-admin-actions">
-            <button
-              type="button"
-              className="sc-icon-action-btn edit"
-              onClick={() => onEdit(student)}
-              title="Edit Student Information"
-              aria-label="Edit student"
-            >
-              <EditIcon size={15} />
-            </button>
-            <button
-              type="button"
-              className="sc-icon-action-btn delete"
-              onClick={() => onDelete(student)}
-              title="Remove Student Record"
-              aria-label="Delete student"
-            >
-              <TrashIcon size={15} />
-            </button>
-          </div>
+          <button
+            type="button"
+            className="card-action-btn delete"
+            onClick={() => onDelete(student)}
+            title={`Delete ${name}'s card`}
+            aria-label={`Delete ${name}`}
+          >
+            <TrashIcon size={13} />
+            <span>Delete</span>
+          </button>
         </div>
-      </article>
-    </div>
+      </div>
+    </article>
   );
 }

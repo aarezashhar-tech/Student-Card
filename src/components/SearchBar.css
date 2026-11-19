@@ -1,0 +1,248 @@
+/* ==========================================================================
+   SearchBar.css - Precision Monolithic Control Dock
+   ========================================================================== */
+
+.search-dock {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: rgba(15, 17, 23, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 14px 18px;
+  margin-bottom: 28px;
+  box-shadow: 
+    0 12px 30px -6px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+}
+
+.dock-top-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Search input field */
+.search-field {
+  flex: 1;
+  min-width: 240px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 0 14px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.search-field:focus-within {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(99, 102, 241, 0.5);
+  box-shadow: 0 0 18px rgba(99, 102, 241, 0.15);
+}
+
+.search-icon {
+  color: #64748b;
+  flex-shrink: 0;
+  margin-right: 10px;
+}
+
+.search-input {
+  width: 100%;
+  height: 42px;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #f8fafc;
+  font-size: 0.88rem;
+  letter-spacing: -0.01em;
+}
+
+.search-input::placeholder {
+  color: #64748b;
+}
+
+/* Remove default webkit search cancel button */
+.search-input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.search-clear-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: #94a3b8;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.search-clear-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #f8fafc;
+}
+
+.search-kbd {
+  display: inline-block;
+  padding: 2px 7px;
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  color: #64748b;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Sort Selector */
+.sort-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 0 12px;
+  height: 42px;
+  flex-shrink: 0;
+  transition: border-color 0.2s ease;
+}
+
+.sort-box:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.sort-icon {
+  color: #64748b;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.sort-select {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #e2e8f0;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.sort-select option {
+  background: #11141c;
+  color: #f1f5f9;
+}
+
+/* Add Student Action Button */
+.add-student-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 42px;
+  padding: 0 16px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.add-student-btn:hover {
+  background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+  box-shadow: 0 6px 18px rgba(99, 102, 241, 0.45);
+  transform: translateY(-1px);
+}
+
+/* Department Filter Rail */
+.dept-filter-rail {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: none;
+}
+
+.dept-filter-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  padding: 6px 14px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+}
+
+.filter-chip:hover {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.filter-chip.active {
+  color: #ffffff;
+  background: rgba(99, 102, 241, 0.2);
+  border-color: rgba(99, 102, 241, 0.5);
+  box-shadow: 0 0 16px rgba(99, 102, 241, 0.25);
+  font-weight: 600;
+}
+
+/* Favorites filter chip */
+.filter-chip.favorites-chip.active {
+  color: #ffffff;
+  background: rgba(244, 63, 94, 0.2);
+  border-color: rgba(244, 63, 94, 0.5);
+  box-shadow: 0 0 16px rgba(244, 63, 94, 0.25);
+}
+
+.chip-badge {
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  background: rgba(244, 63, 94, 0.3);
+  color: #fda4af;
+  padding: 1px 6px;
+  border-radius: 999px;
+}
+
+@media (max-width: 640px) {
+  .dock-top-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .sort-box {
+    justify-content: space-between;
+  }
+  .sort-select {
+    width: 100%;
+  }
+  .add-student-btn {
+    justify-content: center;
+  }
+}

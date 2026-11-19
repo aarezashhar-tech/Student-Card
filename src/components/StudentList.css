@@ -1,77 +1,88 @@
 /* ==========================================================================
-   StudentList.css - Responsive Card Grid & Clean White Empty State
+   StudentList.css - Responsive Precision Grid & Minimalist Empty State
    ========================================================================== */
 
-.student-cards-grid {
+.student-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-  gap: 28px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 26px;
   justify-items: center;
-  margin-top: 8px;
+  width: 100%;
+  animation: fadeInGrid 0.4s ease-out;
 }
 
-/* Empty State */
-.empty-state-card {
+@keyframes fadeInGrid {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Minimalist Empty State */
+.empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 50px 24px;
-  background: #ffffff;
-  border: 1px dashed #cbd5e1;
+  padding: 60px 24px;
+  background: rgba(15, 17, 23, 0.5);
+  backdrop-filter: blur(16px);
+  border: 1px dashed rgba(255, 255, 255, 0.1);
   border-radius: 24px;
-  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.04);
-  max-width: 540px;
-  margin: 30px auto;
+  max-width: 480px;
+  margin: 40px auto;
+  animation: fadeInGrid 0.3s ease;
 }
 
-.empty-icon-halo {
-  width: 76px;
-  height: 76px;
+.empty-halo {
+  width: 58px;
+  height: 58px;
   border-radius: 50%;
-  background: #eff6ff;
-  border: 1px solid #bfdbfe;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.25);
   display: grid;
   place-items: center;
+  color: #818cf8;
   margin-bottom: 18px;
 }
 
-.empty-search-icon {
-  color: #2563eb;
-}
-
 .empty-title {
-  font-size: 1.25rem;
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
   font-weight: 700;
-  color: #0f172a;
+  color: #f8fafc;
   margin: 0 0 8px;
 }
 
-.empty-desc {
-  font-size: 0.88rem;
+.empty-text {
+  font-size: 0.85rem;
   color: #64748b;
-  max-width: 400px;
   line-height: 1.5;
   margin: 0 0 20px;
+  max-width: 340px;
 }
 
-.btn-empty-reset {
+.empty-reset-btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  border-radius: 12px;
-  background: #4f46e5;
-  border: none;
-  color: #ffffff;
-  font-size: 0.85rem;
-  font-weight: 700;
+  gap: 7px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #f1f5f9;
+  font-size: 0.8rem;
+  font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.25);
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
 
-.btn-empty-reset:hover {
-  background: #4338ca;
+.empty-reset-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
   transform: translateY(-1px);
 }

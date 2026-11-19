@@ -1,518 +1,493 @@
 /* ==========================================================================
-   StudentCard.css - Clean White Physical Card Badge & Micro-Interactions
+   StudentCard.css - Monolithic Precision Obsidian Identity Tile
    ========================================================================== */
 
-.student-card-wrapper {
-  perspective: 1000px;
+.student-card {
+  --card-x: 50%;
+  --card-y: 50%;
   position: relative;
-  display: flex;
-  justify-content: center;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.sc-badge {
-  --rot-x: 0deg;
-  --rot-y: 0deg;
-  --glare-x: 50%;
-  --glare-y: 50%;
-  --glare-opacity: 0;
-
-  position: relative;
-  width: 320px;
-  min-height: 480px;
-  padding: 26px 20px 18px;
-  border-radius: 24px;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
+  width: 100%;
+  max-width: 340px;
+  min-height: 460px;
+  background: rgba(15, 17, 23, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 
-    0 10px 30px -4px rgba(15, 23, 42, 0.06),
-    0 4px 12px -2px rgba(15, 23, 42, 0.03);
-  transform: rotateX(var(--rot-x)) rotateY(var(--rot-y));
-  transform-style: preserve-3d;
-  transition: transform 0.15s ease-out, box-shadow 0.3s ease, border-color 0.3s ease;
-  overflow: hidden;
+    0 16px 36px -8px rgba(0, 0, 0, 0.6),
+    0 2px 8px -1px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.09);
+  padding: 22px 20px 18px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  transition: 
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
-.student-card-wrapper:hover .sc-badge {
+.student-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(var(--accent-rgb), 0.45);
   box-shadow: 
-    0 20px 45px -8px rgba(79, 70, 229, 0.14),
-    0 8px 18px -4px rgba(15, 23, 42, 0.06);
-  border-color: #cbd5e1;
+    0 24px 48px -12px rgba(0, 0, 0, 0.7),
+    0 0 28px -6px rgba(var(--accent-rgb), 0.22),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.16);
 }
 
-/* Honors Gold Highlight */
-.student-card-wrapper.is-honors .sc-badge {
-  border-color: #fde68a;
+/* Honors Subtle Golden Glow */
+.student-card.is-honors {
+  border-color: rgba(245, 158, 11, 0.25);
 }
-.student-card-wrapper.is-honors:hover .sc-badge {
+
+.student-card.is-honors:hover {
+  border-color: rgba(245, 158, 11, 0.6);
   box-shadow: 
-    0 20px 45px -8px rgba(217, 119, 6, 0.15),
-    0 8px 18px -4px rgba(15, 23, 42, 0.06);
-  border-color: #f59e0b;
+    0 24px 48px -12px rgba(0, 0, 0, 0.75),
+    0 0 32px -6px rgba(245, 158, 11, 0.25),
+    inset 0 1px 0 0 rgba(253, 230, 138, 0.25);
 }
 
-/* Specular Glare */
-.sc-glare {
+/* Liked state subtle border accent */
+.student-card.is-liked {
+  border-color: rgba(244, 63, 94, 0.25);
+}
+
+/* Micro-cursor reflection inside the card */
+.card-sheen {
   position: absolute;
   inset: 0;
   pointer-events: none;
   background: radial-gradient(
-    circle at var(--glare-x) var(--glare-y),
-    rgba(255, 255, 255, 0.6) 0%,
-    rgba(255, 255, 255, 0.1) 40%,
-    rgba(255, 255, 255, 0) 70%
+    400px circle at var(--card-x) var(--card-y),
+    rgba(255, 255, 255, 0.04),
+    transparent 70%
   );
-  opacity: var(--glare-opacity);
-  transition: opacity 0.25s ease;
-  mix-blend-mode: soft-light;
-  border-radius: 24px;
-  z-index: 20;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 22px;
 }
 
-/* Lanyard Slot at Top */
-.sc-lanyard {
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  z-index: 10;
+.student-card:hover .card-sheen {
+  opacity: 1;
 }
 
-.sc-lanyard-slot {
-  width: 52px;
-  height: 9px;
-  border-radius: 999px;
-  background: #f1f5f9;
-  border: 1px solid #cbd5e1;
-  box-shadow: inset 0 2px 3px rgba(15, 23, 42, 0.12);
-}
-
-/* Top Strip */
-.sc-header-strip {
+/* Top Capsule Row */
+.card-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 10px;
-  margin-bottom: 14px;
+  gap: 10px;
 }
 
-/* Smart EMV Chip */
-.sc-chip {
-  width: 32px;
-  height: 24px;
-  background: linear-gradient(135deg, #fcd34d 0%, #d97706 100%);
-  border-radius: 5px;
-  position: relative;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
-  display: flex;
+.dept-badge {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(var(--accent-rgb), 0.25);
 }
 
-.sc-chip-lines {
-  width: 18px;
-  height: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.35);
-  border-radius: 2px;
-  position: relative;
-}
-.sc-chip-lines::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: -4px;
-  right: -4px;
-  height: 1px;
-  background: rgba(0, 0, 0, 0.35);
+.dept-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-color);
+  box-shadow: 0 0 8px var(--accent-color);
 }
 
-.sc-institution {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.sc-college-name {
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 1.2px;
-  color: #475569;
-  text-transform: uppercase;
-}
-
-.sc-id-type {
-  font-size: 0.58rem;
-  letter-spacing: 0.6px;
-  color: #94a3b8;
+.dept-name {
+  font-size: 0.75rem;
   font-weight: 600;
+  color: #e2e8f0;
+  letter-spacing: 0.02em;
 }
 
-.sc-honor-badge {
+.top-tags {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.year-pill {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 4px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.honors-badge {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 3px 8px;
-  background: #fffbeb;
-  border: 1px solid #fde68a;
-  border-radius: 999px;
-  color: #b45309;
-  font-size: 0.62rem;
+  font-size: 0.65rem;
   font-weight: 700;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.06em;
+  color: #fbbf24;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  padding: 4px 8px;
+  border-radius: 999px;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.15);
 }
 
-/* Avatar Section */
-.sc-avatar-section {
+/* Like Heart Button */
+.card-like-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #64748b;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0;
+}
+
+.card-like-btn:hover {
+  background: rgba(244, 63, 94, 0.12);
+  border-color: rgba(244, 63, 94, 0.3);
+  color: #fb7185;
+  transform: scale(1.1);
+}
+
+.card-like-btn.active {
+  background: rgba(244, 63, 94, 0.18);
+  border-color: rgba(244, 63, 94, 0.45);
+  color: #f43f5e;
+  box-shadow: 0 0 14px rgba(244, 63, 94, 0.35);
+  transform: scale(1.05);
+}
+
+/* Card Body / Identity Core */
+.card-body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 12px;
+  text-align: center;
+  padding: 14px 0 10px;
 }
 
-.sc-avatar-halo {
+.avatar-ring {
+  position: relative;
+  width: 82px;
+  height: 82px;
+  border-radius: 50%;
   padding: 3px;
-  border-radius: 50%;
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
-  transition: transform 0.3s ease;
+  background: linear-gradient(
+    135deg,
+    rgba(var(--accent-rgb), 0.7) 0%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(var(--accent-rgb), 0.1) 100%
+  );
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.5);
+  margin-bottom: 12px;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.student-card-wrapper:hover .sc-avatar-halo {
+.student-card:hover .avatar-ring {
   transform: scale(1.04);
+  box-shadow: 0 10px 28px -2px rgba(var(--accent-rgb), 0.25);
 }
 
-.sc-avatar-frame {
-  width: 96px;
-  height: 96px;
-  border-radius: 50%;
-  background: #f8fafc;
-  border: 3px solid #ffffff;
-  overflow: hidden;
-  display: grid;
-  place-items: center;
-}
-
-.sc-avatar-img {
+.student-avatar {
   width: 100%;
   height: 100%;
+  border-radius: 50%;
   object-fit: cover;
+  background: #1e2230;
   display: block;
 }
 
-.sc-avatar-initials {
+.avatar-fallback {
   width: 100%;
   height: 100%;
+  border-radius: 50%;
+  background: #181b24;
+  color: #f8fafc;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.4rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
-  font-weight: 800;
-  color: #ffffff;
-  letter-spacing: 1px;
+  letter-spacing: 0.04em;
 }
 
-.sc-badge-tags {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.sc-dept-tag {
-  font-size: 0.72rem;
+.student-name {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
   font-weight: 700;
-  padding: 3px 10px;
-  border-radius: 8px;
-  background: #f8fafc;
-  border: 1px solid;
-  letter-spacing: 0.4px;
+  color: #f8fafc;
+  letter-spacing: -0.02em;
+  margin: 0 0 10px;
+  line-height: 1.25;
 }
 
-.sc-year-tag {
-  font-size: 0.7rem;
-  font-weight: 600;
-  padding: 3px 9px;
-  border-radius: 8px;
-  background: #f1f5f9;
-  color: #475569;
-  border: 1px solid #e2e8f0;
-}
-
-/* Student Information */
-.sc-info {
-  text-align: center;
-  margin-bottom: 14px;
-}
-
-.sc-student-name {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #0f172a;
-  margin: 0 0 6px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  letter-spacing: -0.3px;
-}
-
-.sc-roll-container {
+/* Roll Number Interactive Pill */
+.roll-pill {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background: #f8fafc;
-  padding: 4px 10px;
-  border-radius: 8px;
-  border: 1px solid #e2e8f0;
+  gap: 7px;
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  color: #94a3b8;
+  font-size: 0.78rem;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.sc-roll-label {
+.roll-pill:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.24);
+  color: #f1f5f9;
+  transform: translateY(-1px);
+}
+
+.roll-label {
   font-size: 0.65rem;
   font-weight: 700;
+  letter-spacing: 0.08em;
   color: #64748b;
-  letter-spacing: 0.5px;
 }
 
-.sc-roll-number {
-  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, monospace;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: #1e293b;
-  letter-spacing: 0.6px;
+.roll-value {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: #e2e8f0;
+  letter-spacing: 0.04em;
 }
 
-.sc-copy-btn {
-  background: transparent;
-  border: none;
-  color: #64748b;
-  cursor: pointer;
-  padding: 2px 4px;
-  border-radius: 4px;
+.roll-icon {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
+  color: #64748b;
+  transition: color 0.2s ease;
 }
 
-.sc-copy-btn:hover {
-  color: #0f172a;
-  background: #e2e8f0;
+.roll-pill:hover .roll-icon {
+  color: #e2e8f0;
 }
 
-.sc-copy-btn.copied {
-  color: #10b981;
+.roll-pill.copied {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #34d399;
 }
 
-/* Academic Row & Radial Gauge */
-.sc-academic-row {
+.roll-pill.copied .roll-icon {
+  color: #34d399;
+}
+
+.copied-toast {
+  position: absolute;
+  top: -26px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #10b981;
+  color: #ffffff;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 3px 8px;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+  pointer-events: none;
+  animation: fadeInDown 0.2s ease;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 4px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* Card Footer / Spec Rail */
+.card-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.metric-row {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.metric-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.metric-label {
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #64748b;
+}
+
+.metric-value {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.cgpa-number {
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.cgpa-scale {
+  font-size: 0.72rem;
+  color: #64748b;
+}
+
+/* Precision Progress Track */
+.progress-track {
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent-color), #ffffff);
+  box-shadow: 0 0 10px var(--accent-color);
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.meta-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 14px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
-  margin-bottom: 12px;
+  padding-top: 2px;
 }
 
-.sc-details-mini {
+.meta-item {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  align-items: center;
+  gap: 6px;
 }
 
-.sc-detail-col {
-  display: flex;
-  flex-direction: column;
-}
-
-.sc-detail-title {
+.meta-key {
   font-size: 0.62rem;
-  font-weight: 600;
-  color: #64748b;
-  letter-spacing: 0.5px;
-}
-
-.sc-detail-val {
-  font-size: 0.82rem;
   font-weight: 700;
-  color: #1e293b;
+  letter-spacing: 0.06em;
+  color: #475569;
 }
 
-.sc-status-active {
+.meta-val {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.meta-status {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  color: #059669;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #10b981;
+  letter-spacing: 0.04em;
 }
 
-.sc-status-dot {
-  width: 7px;
-  height: 7px;
+.status-indicator-dot {
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
   background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: pulseBeacon 2s infinite ease-in-out;
 }
 
-/* CGPA Circular Gauge */
-.sc-cgpa-gauge {
-  position: relative;
-  width: 68px;
-  height: 68px;
-  display: grid;
-  place-items: center;
+@keyframes pulseBeacon {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.85);
+  }
 }
 
-.sc-gauge-svg {
-  width: 100%;
-  height: 100%;
-  transform: rotate(-90deg);
-}
-
-.sc-gauge-bg {
-  fill: none;
-  stroke: #e2e8f0;
-  stroke-width: 6;
-}
-
-.sc-gauge-fill {
-  fill: none;
-  stroke-width: 6;
-  stroke-linecap: round;
-  transition: stroke-dashoffset 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.sc-gauge-text {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-}
-
-.sc-gauge-val {
-  font-size: 1.05rem;
-  font-weight: 800;
-  color: #0f172a;
-  letter-spacing: -0.5px;
-}
-
-.sc-gauge-caption {
-  font-size: 0.58rem;
-  font-weight: 700;
-  color: #64748b;
-  margin-top: 2px;
-}
-
-/* Security Barcode Strip */
-.sc-security-barcode {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  margin-bottom: 12px;
-  opacity: 0.75;
-}
-
-.sc-barcode-lines {
-  display: flex;
-  align-items: center;
-  height: 16px;
-  gap: 1.5px;
-}
-
-.sc-barcode-lines span {
-  height: 100%;
-  background: #64748b;
-  display: inline-block;
-  border-radius: 0.5px;
-}
-
-.sc-barcode-text {
-  font-family: monospace;
-  font-size: 0.52rem;
-  letter-spacing: 1.5px;
-  color: #64748b;
-}
-
-/* Actions Bar */
-.sc-actions-bar {
-  margin-top: auto;
+/* Edit and Delete Actions Strip */
+.card-actions-strip {
   display: flex;
   align-items: center;
   gap: 8px;
+  padding-top: 6px;
 }
 
-.sc-view-pass-btn {
+.card-action-btn {
   flex: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
-  padding: 10px 14px;
-  background: #4f46e5;
-  border: none;
-  border-radius: 12px;
-  color: #ffffff;
-  font-size: 0.85rem;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-size: 0.74rem;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
-  transition: all 0.2s ease;
+  outline: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.sc-view-pass-btn:hover {
-  background: #4338ca;
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+.card-action-btn.edit {
+  color: #94a3b8;
+}
+
+.card-action-btn.edit:hover {
+  color: #ffffff;
+  background: rgba(99, 102, 241, 0.18);
+  border-color: rgba(99, 102, 241, 0.4);
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.2);
   transform: translateY(-1px);
 }
 
-.sc-admin-actions {
-  display: flex;
-  align-items: center;
-  gap: 5px;
+.card-action-btn.delete {
+  color: #94a3b8;
 }
 
-.sc-icon-action-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #e2e8f0;
-  background: #ffffff;
-  color: #64748b;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.sc-icon-action-btn:hover {
-  color: #0f172a;
-  border-color: #cbd5e1;
+.card-action-btn.delete:hover {
+  color: #fda4af;
+  background: rgba(244, 63, 94, 0.16);
+  border-color: rgba(244, 63, 94, 0.4);
+  box-shadow: 0 0 12px rgba(244, 63, 94, 0.2);
   transform: translateY(-1px);
-}
-
-.sc-icon-action-btn.edit:hover {
-  background: #eff6ff;
-  border-color: #bfdbfe;
-  color: #2563eb;
-}
-
-.sc-icon-action-btn.delete:hover {
-  background: #fef2f2;
-  border-color: #fecaca;
-  color: #dc2626;
-}
-
-@media (max-width: 640px) {
-  .sc-badge {
-    width: 100%;
-    max-width: 340px;
-  }
 }
